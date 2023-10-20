@@ -27,7 +27,23 @@ export class IncentivesAPI {
   async createGiftCard(
     params: {
       creationRequestId: string;
-    } & IncentivesAPI.GiftCardValue
+      currencyCode: string;
+      amount: number;
+    },
+    options?: {
+      /// B&M Only
+      transactionSource?: Object;
+      sourceId?: string;
+      institutionId?: string;
+      sourceDetails?: string;
+      /// Reseller Only
+      programId?: string;
+      /// PV Use Case Only
+      productType?: string;
+
+      /// Optional
+      externalReference?: string;
+    }
   ): Promise<IncentivesAPI.CreateGiftCardResponse> {
     const createGiftCardRequest: IncentivesAPI.CreateGiftCardRequest = {
       creationRequestId: params.creationRequestId,
@@ -36,6 +52,7 @@ export class IncentivesAPI {
         amount: params.amount,
         currencyCode: params.currencyCode,
       },
+      ...options,
     };
     return this.sendAwsSignedRequest<
       IncentivesAPI.CreateGiftCardRequest,
@@ -142,17 +159,17 @@ export namespace IncentivesAPI {
     partnerId: string;
     value: GiftCardValue;
     /// B&M Only
-    transactionSource?: Object;
-    sourceId?: string;
-    institutionId?: string;
-    sourceDetails?: string;
+    transactionSource?: Object | null;
+    sourceId?: string | null;
+    institutionId?: string | null;
+    sourceDetails?: string | null;
     /// Reseller Only
-    programId?: string;
+    programId?: string | null;
     /// PV Use Case Only
-    productType?: string;
+    productType?: string | null;
 
     /// Optional
-    externalReference?: string;
+    externalReference?: string | null;
   }
 
   /**
