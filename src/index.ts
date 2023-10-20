@@ -29,7 +29,7 @@ export class IncentivesAPI {
       creationRequestId: string;
     } & IncentivesAPI.GiftCardValue
   ): Promise<IncentivesAPI.CreateGiftCardResponse> {
-    const createGiftCardRequestParams: IncentivesAPI.CreateGiftCardRequest = {
+    const createGiftCardRequest: IncentivesAPI.CreateGiftCardRequest = {
       creationRequestId: `${this.partnerId}${params.creationRequestId}`,
       partnerId: this.partnerId,
       value: {
@@ -37,10 +37,10 @@ export class IncentivesAPI {
         currencyCode: params.currencyCode,
       },
     };
-    return this.sendRequest<
+    return this.sendAwsSignedRequest<
       IncentivesAPI.CreateGiftCardRequest,
       IncentivesAPI.CreateGiftCardResponse
-    >('CreateGiftCard', createGiftCardRequestParams);
+    >('CreateGiftCard', createGiftCardRequest);
   }
 
   /**
@@ -51,17 +51,17 @@ export class IncentivesAPI {
   async cancelGiftCard(
     creationRequestId: string
   ): Promise<IncentivesAPI.CancelGiftCardResponse> {
-    const createGiftCardRequestParams: IncentivesAPI.CancelGiftCardRequest = {
+    const createGiftCardRequest: IncentivesAPI.CancelGiftCardRequest = {
       creationRequestId: creationRequestId,
       partnerId: this.partnerId,
     };
-    return this.sendRequest<
+    return this.sendAwsSignedRequest<
       IncentivesAPI.CancelGiftCardRequest,
       IncentivesAPI.CancelGiftCardResponse
-    >('CancelGiftCard', createGiftCardRequestParams);
+    >('CancelGiftCard', createGiftCardRequest);
   }
 
-  private async sendRequest<Request, Response>(
+  private async sendAwsSignedRequest<Request, Response>(
     operation: 'CreateGiftCard' | 'CancelGiftCard',
     requestParams: Request
   ): Promise<Response> {
