@@ -1,9 +1,6 @@
 import * as aws4 from 'aws4';
 import axios, {AxiosHeaders} from 'axios';
 
-/// mocks: https://developer.amazon.com/ja/docs/incentives-api/test-accounts.html
-/// schema: https://developer.amazon.com/ja/docs/incentives-api/digital-gift-cards.html#requests
-/// endpoint: https://developer.amazon.com/ja/docs/incentives-api/incentives-api.html#endpoints
 export class IncentivesAPI {
   private partnerId: string;
   private accessKeyId: string;
@@ -85,6 +82,9 @@ export class IncentivesAPI {
 }
 
 export namespace IncentivesAPI {
+  /**
+   * See details: https://developer.amazon.com/ja/docs/incentives-api/digital-gift-cards.html#requests
+   */
   export interface CreateGiftCardRequest {
     creationRequestId: string;
     partnerId: string;
@@ -103,6 +103,9 @@ export namespace IncentivesAPI {
     externalReference?: string;
   }
 
+  /**
+   * See details: https://developer.amazon.com/ja/docs/incentives-api/digital-gift-cards.html#responses
+   */
   export interface CreateGiftCardResponse {
     creationRequestId: string;
     cardInfo: GiftCardInfo;
