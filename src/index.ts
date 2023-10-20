@@ -31,17 +31,12 @@ export class IncentivesAPI {
       amount: number;
     },
     options?: {
-      /// B&M Only
       transactionSource?: Object;
       sourceId?: string;
       institutionId?: string;
       sourceDetails?: string;
-      /// Reseller Only
       programId?: string;
-      /// PV Use Case Only
       productType?: string;
-
-      /// Optional
       externalReference?: string;
     }
   ): Promise<IncentivesAPI.CreateGiftCardResponse> {
@@ -113,11 +108,13 @@ export class IncentivesAPI {
   }
 }
 
-/// See details: https://developer.amazon.com/ja/docs/incentives-api/incentives-api.html#endpoints
+/*
+ * See details: https://developer.amazon.com/ja/docs/incentives-api/incentives-api.html#endpoints
+ */
 export namespace IncentivesAPI {
-  /// Naming convention follows the the scratchpad: https://s3.amazonaws.com/AGCOD/htmlSDKv2/htmlSDKv2_NAEUFE/index.html
+  // Naming convention follows the the scratchpad: https://s3.amazonaws.com/AGCOD/htmlSDKv2/htmlSDKv2_NAEUFE/index.html
   export class Endpoint {
-    /// Sandbox Endpoints
+    // Sandbox Endpoints
     static NorthAmericaSandbox = new Endpoint(
       'agcod-v2-gamma.amazon.com',
       'us-east-1'
@@ -133,7 +130,7 @@ export namespace IncentivesAPI {
       'us-west-2'
     );
 
-    /// Production Endpoints
+    // Production Endpoints
     static NorthAmericaProduction = new Endpoint(
       'agcod-v2.amazon.com',
       'us-east-1'
