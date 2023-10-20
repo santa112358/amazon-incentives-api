@@ -19,9 +19,10 @@ export class IncentivesAPI {
   }
 
   /**
-   * Creates a gift card.
+   * Creates a live gift card claim code and deducts the amount from the pre-payment account.
    * Note: The `creationRequestId` parameter will be internally prefixed with the `partnerId`.
    * The combined length of `partnerId` and `creationRequestId` must not exceed 40 characters.
+   * See details: https://developer.amazon.com/ja/docs/incentives-api/digital-gift-cards.html#creategiftcard
    */
   async createGiftCard(
     params: {
@@ -36,13 +37,40 @@ export class IncentivesAPI {
         currencyCode: params.currencyCode,
       },
     };
-    const operation = 'CreateGiftCard';
+    return this.sendRequest<
+      IncentivesAPI.CreateGiftCardRequest,
+      IncentivesAPI.CreateGiftCardResponse
+    >('CreateGiftCard', createGiftCardRequestParams);
+  }
+
+  /**
+   * Cancel a gift card, as long as the gift card is not claimed by an Amazon customer.
+   * Important: This operation can only be started within 15 minutes of the creation request time stamp.
+   * See details: https://developer.amazon.com/ja/docs/incentives-api/digital-gift-cards.html#cancelgiftcard
+   */
+  async cancelGiftCard(
+    creationRequestId: string
+  ): Promise<IncentivesAPI.CancelGiftCardResponse> {
+    const createGiftCardRequestParams: IncentivesAPI.CancelGiftCardRequest = {
+      creationRequestId: creationRequestId,
+      partnerId: this.partnerId,
+    };
+    return this.sendRequest<
+      IncentivesAPI.CancelGiftCardRequest,
+      IncentivesAPI.CancelGiftCardResponse
+    >('CancelGiftCard', createGiftCardRequestParams);
+  }
+
+  private async sendRequest<Request, Response>(
+    operation: 'CreateGiftCard' | 'CancelGiftCard',
+    requestParams: Request
+  ): Promise<Response> {
     const signedRequest = aws4.sign(
       {
         host: this.endpoint.host,
         region: this.endpoint.region,
         path: `/${operation}`,
-        body: JSON.stringify(createGiftCardRequestParams),
+        body: JSON.stringify(requestParams),
         service: 'AGCODService',
         headers: {
           accept: 'application/json',
@@ -55,33 +83,53 @@ export class IncentivesAPI {
         secretAccessKey: this.secretAccessKey,
       }
     );
-    const response = await axios.post(
+
+    const response = await axios.post<Response>(
       `https://${signedRequest.host}${signedRequest.path}`,
       signedRequest.body,
       {
         headers: signedRequest.headers as AxiosHeaders,
       }
     );
-    const responseData = response.data;
-    const parsedResponse: IncentivesAPI.CreateGiftCardResponse = {
-      creationRequestId: responseData.creationRequestId,
-      cardInfo: {
-        cardStatus: responseData.cardInfo.cardStatus,
-        value: {
-          currencyCode: responseData.cardInfo.value.currencyCode,
-          amount: responseData.cardInfo.value.amount,
-        },
-      },
-      gcClaimCode: responseData.gcClaimCode,
-      gcId: responseData.gcId,
-      gcExpirationDate: responseData.gcExpirationDate,
-      status: responseData.status,
-    };
-    return parsedResponse;
+
+    return response.data;
   }
 }
 
 export namespace IncentivesAPI {
+  /// Naming convention follows the the scratchpad: https://s3.amazonaws.com/AGCOD/htmlSDKv2/htmlSDKv2_NAEUFE/index.html
+  export class Endpoint {
+    /// Sandbox Endpoints
+    static NorthAmericaSandbox = new Endpoint(
+      'agcod-v2-gamma.amazon.com',
+      'us-east-1'
+    );
+
+    static EuropeSandbox = new Endpoint(
+      'agcod-v2-gamma.amazon.co.uk',
+      'eu-west-1'
+    );
+
+    static JapanSandbox = new Endpoint(
+      'agcod-v2-gamma.amazon.co.jp',
+      'us-east-1'
+    );
+
+    /// Production Endpoints
+    static NorthAmericaProduction = new Endpoint(
+      'agcod-v2.amazon.com',
+      'us-east-1'
+    );
+
+    static EuropeProduction = new Endpoint(
+      'agcod-v2.amazon.co.uk',
+      'eu-west-1'
+    );
+
+    static JapanProduction = new Endpoint('agcod-v2.amazon.co.jp', 'us-east-1');
+    constructor(public host: string, public region: string) {}
+  }
+
   /**
    * See details: https://developer.amazon.com/ja/docs/incentives-api/digital-gift-cards.html#requests
    */
@@ -125,36 +173,19 @@ export namespace IncentivesAPI {
     amount: number;
   }
 
-  /// Naming convention follows the the scratchpad: https://s3.amazonaws.com/AGCOD/htmlSDKv2/htmlSDKv2_NAEUFE/index.html
-  export class Endpoint {
-    /// Sandbox Endpoints
-    static NorthAmericaSandbox = new Endpoint(
-      'agcod-v2-gamma.amazon.com',
-      'us-east-1'
-    );
+  /**
+   * See details: https://developer.amazon.com/ja/docs/incentives-api/digital-gift-cards.html#requests-1
+   */
+  export interface CancelGiftCardRequest {
+    creationRequestId: string;
+    partnerId: string;
+  }
 
-    static EuropeSandbox = new Endpoint(
-      'agcod-v2-gamma.amazon.co.uk',
-      'eu-west-1'
-    );
-
-    static JapanSandbox = new Endpoint(
-      'agcod-v2-gamma.amazon.co.jp',
-      'us-east-1'
-    );
-
-    /// Production Endpoints
-    static NorthAmericaProduction = new Endpoint(
-      'agcod-v2.amazon.com',
-      'us-east-1'
-    );
-
-    static EuropeProduction = new Endpoint(
-      'agcod-v2.amazon.co.uk',
-      'eu-west-1'
-    );
-
-    static JapanProduction = new Endpoint('agcod-v2.amazon.co.jp', 'us-east-1');
-    constructor(public host: string, public region: string) {}
+  /**
+   * See details: https://developer.amazon.com/ja/docs/incentives-api/digital-gift-cards.html#responses-1
+   */
+  export interface CancelGiftCardResponse {
+    creationRequestId: string;
+    status: string;
   }
 }
