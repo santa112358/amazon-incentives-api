@@ -5,7 +5,7 @@
   ],
   "name": "amazon-incentives-api",
   "version": "0.1.0",
-  "description": "",
+  "description": "Amazon Incentives API for Node.js to provide a type-safe interface to create and cancel Amazon digital gift cards.",
   "keywords": [
     "amazon",
     "incentives",
