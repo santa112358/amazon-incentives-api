@@ -1,5 +1,8 @@
 # Amazon Incentives API for Node.js
 
+[![Version](https://img.shields.io/npm/v/amazon-incentives-api.svg)](https://www.npmjs.org/package/amazon-incentives-api)
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
+
 Amazon Incentives API for Node.js to provide a type-safe interface to create and cancel Amazon digital gift cards. Built with TypeScript, it ensures reliability and seamless integration for your projects. Suitable for both sandbox and production environments.
 
 ## Installation
