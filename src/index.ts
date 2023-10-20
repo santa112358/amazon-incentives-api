@@ -20,8 +20,8 @@ export class IncentivesAPI {
 
   /**
    * Creates a live gift card claim code and deducts the amount from the pre-payment account.
-   * Note: The `creationRequestId` parameter will be internally prefixed with the `partnerId`.
-   * The combined length of `partnerId` and `creationRequestId` must not exceed 40 characters.
+   * The `creationRequestId` must start from `partnerId`.
+   * The `creationRequestId` must not exceed 40 characters.
    * See details: https://developer.amazon.com/ja/docs/incentives-api/digital-gift-cards.html#creategiftcard
    */
   async createGiftCard(
@@ -30,7 +30,7 @@ export class IncentivesAPI {
     } & IncentivesAPI.GiftCardValue
   ): Promise<IncentivesAPI.CreateGiftCardResponse> {
     const createGiftCardRequest: IncentivesAPI.CreateGiftCardRequest = {
-      creationRequestId: `${this.partnerId}${params.creationRequestId}`,
+      creationRequestId: params.creationRequestId,
       partnerId: this.partnerId,
       value: {
         amount: params.amount,
@@ -96,6 +96,7 @@ export class IncentivesAPI {
   }
 }
 
+/// See details: https://developer.amazon.com/ja/docs/incentives-api/incentives-api.html#endpoints
 export namespace IncentivesAPI {
   /// Naming convention follows the the scratchpad: https://s3.amazonaws.com/AGCOD/htmlSDKv2/htmlSDKv2_NAEUFE/index.html
   export class Endpoint {
@@ -106,13 +107,13 @@ export namespace IncentivesAPI {
     );
 
     static EuropeSandbox = new Endpoint(
-      'agcod-v2-gamma.amazon.co.uk',
+      'agcod-v2-eu-gamma.amazon.com',
       'eu-west-1'
     );
 
     static JapanSandbox = new Endpoint(
-      'agcod-v2-gamma.amazon.co.jp',
-      'us-east-1'
+      'agcod-v2-fe-gamma.amazon.com',
+      'us-west-2'
     );
 
     /// Production Endpoints
@@ -122,11 +123,14 @@ export namespace IncentivesAPI {
     );
 
     static EuropeProduction = new Endpoint(
-      'agcod-v2.amazon.co.uk',
+      'agcod-v2-eu.amazon.com',
       'eu-west-1'
     );
 
-    static JapanProduction = new Endpoint('agcod-v2.amazon.co.jp', 'us-east-1');
+    static JapanProduction = new Endpoint(
+      'agcod-v2-fe.amazon.com',
+      'us-west-2'
+    );
     constructor(public host: string, public region: string) {}
   }
 
