@@ -181,6 +181,25 @@ export namespace IncentivesAPI {
     status: string;
   }
 
+  /**
+   * See details: https://developer.amazon.com/ja/docs/incentives-api/balance-view.html#requests
+   */
+  export interface GetAvailableFundsRequest {
+    partnerId: string;
+  }
+
+  /**
+   * See details: https://developer.amazon.com/ja/docs/incentives-api/balance-view.html#requests
+   */
+  export interface GetAvailableFundsResponse {
+    availableFunds: {
+      amount: number;
+      currencyCode: string;
+    };
+    status: string;
+    timestamp: string;
+  }
+
   export interface GiftCardInfo {
     cardStatus: string;
     value: GiftCardValue;
