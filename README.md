@@ -49,6 +49,14 @@ console.log(creationRequestResponse);
 
 Gift cards can be canceled as long as they remain unclaimed by an Amazon customer. Note that this operation is only possible within 15 minutes of the creation request timestamp.
 
+
+```typescript
+const cancelRequestResponse = await client.cancelGiftCard(
+  'YOUR_UNIQUE_REQUEST_ID'
+);
+console.log(cancelRequestResponse);
+```
+
 ### Getting Available Funds
 
 You can get the available funds in your Amazon Incentives account.
@@ -57,13 +65,6 @@ You can get the available funds in your Amazon Incentives account.
 const availableFundsResponse = await client.getAvailableFunds();
 
 console.log(availableFundsResponse);
-```
-
-```javascript
-const cancelRequestResponse = await client.cancelGiftCard(
-  'YOUR_UNIQUE_REQUEST_ID'
-);
-console.log(cancelRequestResponse);
 ```
 
 ## Contributors ✨
