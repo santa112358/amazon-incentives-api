@@ -1,0 +1,26 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "santa112358",
+      "name": "Santa Takahashi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/43510799?v=4",
+      "profile": "https://pub.dev/publishers/bookm.me/packages",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "amazon-incentives-api",
+  "projectOwner": "santa112358"
+}
