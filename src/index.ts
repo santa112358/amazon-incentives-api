@@ -73,8 +73,24 @@ export class IncentivesAPI {
     >('CancelGiftCard', createGiftCardRequest);
   }
 
+  /**
+   * Get the current balance of available funds in your Amazon Incentives account.
+   * Important: This operation is throttled at one transaction per second.
+   * Attempts to send requests at a greater rate will be ignored.
+   * See details: https://developer.amazon.com/ja/docs/incentives-api/balance-view.html#getavailablefunds
+   */
+  async getAvailableFunds(): Promise<IncentivesAPI.GetAvailableFundsResponse> {
+    const getAvailableFundsRequest: IncentivesAPI.GetAvailableFundsRequest = {
+      partnerId: this.partnerId,
+    };
+    return this.sendAwsSignedRequest<
+      IncentivesAPI.GetAvailableFundsRequest,
+      IncentivesAPI.GetAvailableFundsResponse
+    >('GetAvailableFunds', getAvailableFundsRequest);
+  }
+
   private async sendAwsSignedRequest<Request, Response>(
-    operation: 'CreateGiftCard' | 'CancelGiftCard',
+    operation: 'CreateGiftCard' | 'CancelGiftCard' | 'GetAvailableFunds',
     requestParams: Request
   ): Promise<Response> {
     const signedRequest = aws4.sign(
@@ -179,6 +195,25 @@ export namespace IncentivesAPI {
     gcId: string;
     gcExpirationDate: string;
     status: string;
+  }
+
+  /**
+   * See details: https://developer.amazon.com/ja/docs/incentives-api/balance-view.html#requests
+   */
+  export interface GetAvailableFundsRequest {
+    partnerId: string;
+  }
+
+  /**
+   * See details: https://developer.amazon.com/ja/docs/incentives-api/balance-view.html#requests
+   */
+  export interface GetAvailableFundsResponse {
+    availableFunds: {
+      amount: number;
+      currencyCode: string;
+    };
+    status: string;
+    timestamp: string;
   }
 
   export interface GiftCardInfo {
